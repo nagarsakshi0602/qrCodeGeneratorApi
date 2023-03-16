@@ -1,6 +1,7 @@
 package com.example.springdataDemo.model;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "invoice")
@@ -32,6 +33,9 @@ public class Invoice {
     private String ewbNo;
     @Column(name="qr_code")
     private byte[] qrCode;
+
+    @Column(name="qr_path")
+    private String qrPath;
 
     public Invoice() {
     }
@@ -140,6 +144,15 @@ public class Invoice {
         this.qrCode = qrCode;
     }
 
+    public String getQrPath() {
+        return qrPath;
+    }
+
+    public void setQrPath(String qrPath) {
+        this.qrPath = qrPath;
+    }
+
+
     @Override
     public String toString() {
         return "Invoice{" +
@@ -155,7 +168,8 @@ public class Invoice {
                 ", status='" + status + '\'' +
                 ", signature='" + signature + '\'' +
                 ", ewbNo='" + ewbNo + '\'' +
+                ", qrCode=" + Arrays.toString(qrCode) +
+                ", qrPath='" + qrPath + '\'' +
                 '}';
     }
-
 }
