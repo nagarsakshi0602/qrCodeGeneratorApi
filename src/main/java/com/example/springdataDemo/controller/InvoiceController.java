@@ -1,67 +1,92 @@
 package com.example.springdataDemo.controller;
 
 import com.example.springdataDemo.model.Invoice;
-import com.example.springdataDemo.response.GetQRByInvoiceResponse;
 import com.example.springdataDemo.service.InvoiceService;
+import com.example.springdataDemo.service.CSVService;
+import com.example.springdataDemo.utilities.CSVHelper;
 import com.example.springdataDemo.utilities.QRCodeGenerator;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.core.io.Resource;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/invoice")
 public class InvoiceController {
     @Autowired
     InvoiceService invoiceService;
 
     @Autowired
+    CSVService csvService;
+    @Autowired
     QRCodeGenerator qrCodeGenerator;
 
-    private static final String QR_CODE_IMAGE_PATH = "/Desktop/qr_codes/";
-
-
-    @RequestMapping(value = "/invoice/{irn}", method = RequestMethod.GET)
-    public @ResponseBody List<Invoice> getInvoiceByIrn(@PathVariable String irn) {
+    @GetMapping(value = "/invoiceByIrn")
+    public @ResponseBody List<Invoice> getInvoiceByIrn(@RequestParam("irn") String irn) {
         return invoiceService.findByIrn(irn);
     }
 
-    @RequestMapping(value = "/invoice", method = RequestMethod.GET)
-    public @ResponseBody List<Invoice> getInvoice() {
+    @GetMapping(value = "/all")
+    public @ResponseBody List<Invoice> getInvoices() {
         return invoiceService.getAllInvoices();
     }
 
-    /*@RequestMapping(value = "/invoice/getQR/{id}", method = RequestMethod.GET)
-    public ResponseEntity generateQR(@PathVariable Long id) throws IOException, WriterException {
+    @GetMapping(value = "/invoiceById")
+    public @ResponseBody Optional<Invoice> getInvoice(@RequestParam("id") Long id) {
+        return invoiceService.findById(id);
+    }
+
+    @PostMapping(value = "/upload")
+    public ResponseEntity<?> uploadInvoice(@RequestParam("file") MultipartFile file) throws Exception {
+        String message = "";
+        if (CSVHelper.hasCSVFormat(file)) {
+            try {
+                csvService.saveInvoice(file);
+                message = "File uploaded successfully: " + file.getOriginalFilename();
+                return ResponseEntity.status(HttpStatus.OK).body(message);
+            } catch (Exception e) {
+                message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+            }
+        }
+        message = "Please upload a csv file!";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    }
+
+    @GetMapping(value = "/getQRById")
+    public ResponseEntity<?> generateQR(@RequestParam("id") Long id) throws IOException, WriterException {
         Optional<Invoice> invoice = invoiceService.findById(id);
 
-        Path path = qrCodeGenerator.generateQRImage(id, invoice, QR_CODE_IMAGE_PATH);
+        byte[] imageBytes;
+        try {
+            imageBytes = qrCodeGenerator.generateQRImage(id, invoice);
+        } catch (Exception e) {
+            throw new RuntimeException("QR not generated successfully " + e.getMessage());
+        }
 
-        return ResponseEntity.status(HttpStatus.OK).body(path);
-    }*/
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.IMAGE_PNG).body(imageBytes);
+    }
 
-    @RequestMapping(value = "/invoice/getQRByInvoiceValue/{invoiceValue}", method = RequestMethod.GET)
-    public ResponseEntity<?> generateQRInvoiceValue(@PathVariable String invoiceValue)
-            throws IOException, WriterException, URISyntaxException {
+    @GetMapping(value = "/getQRByInvoiceValue")
+    public ResponseEntity<?> generateQRInvoiceValue(@RequestParam("invoiceValue") String invoiceValue) {
 
         Invoice invoice = invoiceService.findByInvoiceValue(invoiceValue);
 
-        //setting qr path
-        String qr_path = System.getProperty("user.home") + QR_CODE_IMAGE_PATH;
+        byte[] imageBytes;
+        try {
+            imageBytes = qrCodeGenerator.generateQRImage(invoiceValue, Optional.ofNullable(invoice));
 
-        byte[] imageBytes = qrCodeGenerator.generateQRImage(invoiceValue, Optional.ofNullable(invoice), qr_path);
+        } catch (Exception e) {
+            throw new RuntimeException("QR not generated successfully " + e.getMessage());
+        }
 
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.IMAGE_PNG).body(imageBytes);
     }

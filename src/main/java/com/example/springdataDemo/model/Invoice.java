@@ -1,5 +1,7 @@
 package com.example.springdataDemo.model;
 
+import com.opencsv.bean.CsvBindByName;
+
 import javax.persistence.*;
 import java.util.Arrays;
 
@@ -7,29 +9,40 @@ import java.util.Arrays;
 @Table(name = "invoice")
 public class Invoice {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @CsvBindByName(column = "Sl. No")
     private Long id;
     @Column(name="irn")
+    @CsvBindByName(column = "IRN")
     private String irn;
     @Column(name="ack_no")
+    @CsvBindByName(column = "Ack No")
     private String ackNo;
     @Column(name="ack_date")
+    @CsvBindByName(column = "Ack Date")
     private String ackDate;
     @Column(name="doc_no")
+    @CsvBindByName(column = "Doc No")
     private String docNo;
     @Column(name="doc_type")
+    @CsvBindByName(column = "Doc Typ")
     private String docType;
     @Column(name="doc_date")
+    @CsvBindByName(column = "Doc Date")
     private String docDate;
     @Column(name="inv_value")
+    @CsvBindByName(column = "Inv Value.")
     private String invValue;
     @Column(name="recipient_gstin")
+    @CsvBindByName(column = "Recipient GSTIN")
     private String recipientGSTIN;
     @Column(name="status")
+    @CsvBindByName(column = "Status")
     private String status;
     @Column(name="signature")
+    @CsvBindByName(column = "Signed QR Code")
     private String signature;
     @Column(name="ewb_no")
+    @CsvBindByName(column = "EWB No./ If Any Errors While Creating EWB.")
     private String ewbNo;
     @Column(name="qr_code")
     private byte[] qrCode;
@@ -38,6 +51,23 @@ public class Invoice {
     private String qrPath;
 
     public Invoice() {
+    }
+
+    public Invoice(Long id, String irn, String ackNo, String ackDate, String docNo, String docType, String docDate, String invValue, String recipientGSTIN, String status, String signature, String ewbNo, byte[] qrCode, String qrPath) {
+        this.id = id;
+        this.irn = irn;
+        this.ackNo = ackNo;
+        this.ackDate = ackDate;
+        this.docNo = docNo;
+        this.docType = docType;
+        this.docDate = docDate;
+        this.invValue = invValue;
+        this.recipientGSTIN = recipientGSTIN;
+        this.status = status;
+        this.signature = signature;
+        this.ewbNo = ewbNo;
+        this.qrCode = qrCode;
+        this.qrPath = qrPath;
     }
 
     public Long getId() {

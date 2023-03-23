@@ -20,7 +20,14 @@ import java.util.Optional;
 
 @Component
 public class QRCodeGenerator {
-    public byte[] generateQRImage(Object name, Optional<Invoice> invoice, String path) throws WriterException, IOException, URISyntaxException {
+
+    private static final String QR_CODE_IMAGE_PATH = "/Desktop/qr_codes/";
+
+    public byte[] generateQRImage(Object name, Optional<Invoice> invoice) throws WriterException, IOException, URISyntaxException {
+
+        //setting qr path
+        String path = System.getProperty("user.home") + QR_CODE_IMAGE_PATH;
+
         //Creating qr matrix
         BitMatrix matrix = new MultiFormatWriter().encode(
                 new String(invoice.toString().getBytes("UTF-8"), "UTF-8"),

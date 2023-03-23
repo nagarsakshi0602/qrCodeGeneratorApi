@@ -5,7 +5,9 @@ import com.example.springdataDemo.model.Invoice;
 import com.example.springdataDemo.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +15,9 @@ import java.util.Optional;
 public class InvoiceService {
     @Autowired
     InvoiceRepository invoiceRepository;
+
+    @Autowired
+    CSVService csvService;
 
     public List<Invoice> getAllInvoices() {
         return (List<Invoice>) invoiceRepository.findAll();
