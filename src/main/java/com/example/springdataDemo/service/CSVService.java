@@ -16,12 +16,12 @@ public class CSVService {
     InvoiceRepository invoiceRepository;
 
 
-    public void saveInvoice(MultipartFile file) throws Exception {
+    public void saveInvoice(MultipartFile file){
         try {
             List<Invoice> namedColumn = (List<Invoice>) CSVHelper.csvToBean(file, Invoice.class);
             invoiceRepository.saveAll(namedColumn);
 
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             throw new RuntimeException("fail to store csv data: " + exception.getMessage());
         }
     }

@@ -2,7 +2,10 @@ package com.example.springdataDemo.model;
 
 import com.opencsv.bean.CsvBindByName;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Arrays;
 
 @Entity
@@ -11,43 +14,43 @@ public class Invoice {
     @Id
     @CsvBindByName(column = "Sl. No")
     private Long id;
-    @Column(name="irn")
+    @Column(name = "irn")
     @CsvBindByName(column = "IRN")
     private String irn;
-    @Column(name="ack_no")
+    @Column(name = "ack_no")
     @CsvBindByName(column = "Ack No")
     private String ackNo;
-    @Column(name="ack_date")
+    @Column(name = "ack_date")
     @CsvBindByName(column = "Ack Date")
     private String ackDate;
-    @Column(name="doc_no")
+    @Column(name = "doc_no")
     @CsvBindByName(column = "Doc No")
     private String docNo;
-    @Column(name="doc_type")
+    @Column(name = "doc_type")
     @CsvBindByName(column = "Doc Typ")
     private String docType;
-    @Column(name="doc_date")
+    @Column(name = "doc_date")
     @CsvBindByName(column = "Doc Date")
     private String docDate;
-    @Column(name="inv_value")
+    @Column(name = "inv_value")
     @CsvBindByName(column = "Inv Value.")
     private String invValue;
-    @Column(name="recipient_gstin")
+    @Column(name = "recipient_gstin")
     @CsvBindByName(column = "Recipient GSTIN")
     private String recipientGSTIN;
-    @Column(name="status")
+    @Column(name = "status")
     @CsvBindByName(column = "Status")
     private String status;
-    @Column(name="signature")
+    @Column(name = "signature")
     @CsvBindByName(column = "Signed QR Code")
     private String signature;
-    @Column(name="ewb_no")
+    @Column(name = "ewb_no")
     @CsvBindByName(column = "EWB No./ If Any Errors While Creating EWB.")
     private String ewbNo;
-    @Column(name="qr_code")
+    @Column(name = "qr_code")
     private byte[] qrCode;
 
-    @Column(name="qr_path")
+    @Column(name = "qr_path")
     private String qrPath;
 
     public Invoice() {
