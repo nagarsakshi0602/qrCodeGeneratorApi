@@ -1,13 +1,12 @@
 package com.example.springdataDemo.controller;
 
 import com.example.springdataDemo.model.Invoice;
-import com.example.springdataDemo.service.InvoiceService;
 import com.example.springdataDemo.service.CSVService;
+import com.example.springdataDemo.service.InvoiceService;
 import com.example.springdataDemo.utilities.CSVHelper;
 import com.example.springdataDemo.utilities.QRCodeGenerator;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -89,5 +88,21 @@ public class InvoiceController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.IMAGE_PNG).body(imageBytes);
+    }
+
+    @GetMapping(value = "/getAllQR")
+    public ResponseEntity<?> generateAllQR() {
+
+        List<Invoice> invoices = invoiceService.getAllInvoices();
+
+        String qrLocation;
+        try {
+            qrLocation = qrCodeGenerator.generateQRImage(invoices);
+
+        } catch (Exception e) {
+            throw new RuntimeException("QR not generated successfully " + e.getMessage());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(qrLocation);
     }
 }
