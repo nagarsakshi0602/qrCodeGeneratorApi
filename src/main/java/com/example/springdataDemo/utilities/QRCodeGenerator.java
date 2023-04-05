@@ -74,7 +74,7 @@ public class QRCodeGenerator {
     public String generateQRImage(List<Invoice> invoices) {
 
         for (Invoice invoice : invoices) {
-            generateQRImage(Optional.ofNullable(invoice.getInvValue()), Optional.of(invoice));
+            generateQRImage(invoice.getInvValue(), Optional.of(invoice));
         }
 
         return "Saved QR code location: " + path;
