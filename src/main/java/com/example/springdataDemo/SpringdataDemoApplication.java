@@ -9,7 +9,8 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.example.springdataDemo.controller", "com.example.springdataDemo.model",
         "com.example.springdataDemo.repository", "com.example.springdataDemo.service",
-        "com.example.springdataDemo.utilities", "com.example.springdataDemo.model.response"})
+        "com.example.springdataDemo.utilities", "com.example.springdataDemo.model.response",
+        "com.example.springdataDemo.view_controller"})
 
 public class SpringdataDemoApplication extends SpringBootServletInitializer {
 
