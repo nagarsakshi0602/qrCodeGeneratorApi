@@ -13,17 +13,19 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 @Component
 public class QRCodeGenerator {
 
     private static final String QR_CODE_IMAGE_PATH = "/Desktop/qr_codes/";
+    private static String path;
 
     public byte[] generateQRImage(Object name, Optional<Invoice> invoice) {
 
         //setting qr path
-        String path = System.getProperty("user.home") + QR_CODE_IMAGE_PATH;
+        path = System.getProperty("user.home") + QR_CODE_IMAGE_PATH;
 
         //Creating qr matrix
         BitMatrix matrix = null;
@@ -68,5 +70,15 @@ public class QRCodeGenerator {
 
         return invoice.get().getQrCode();
     }
+
+    public String generateQRImage(List<Invoice> invoices) {
+
+        for (Invoice invoice : invoices) {
+            generateQRImage(invoice.getInvValue(), Optional.of(invoice));
+        }
+
+        return "Saved QR code location: " + path;
+    }
+
 
 }
