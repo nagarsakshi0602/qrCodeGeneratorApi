@@ -20,6 +20,7 @@ public class SpringdataDemoApplication extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        setRegisterErrorPageFilter(false);
         return builder.sources(SpringdataDemoApplication.class);
     }
 }

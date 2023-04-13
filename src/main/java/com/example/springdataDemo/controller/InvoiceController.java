@@ -4,6 +4,7 @@ import com.example.springdataDemo.model.Invoice;
 import com.example.springdataDemo.service.CSVService;
 import com.example.springdataDemo.service.InvoiceService;
 import com.example.springdataDemo.utilities.CSVHelper;
+import com.example.springdataDemo.utilities.FileProcessingHelper;
 import com.example.springdataDemo.utilities.QRCodeGenerator;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/invoice")
@@ -27,6 +34,10 @@ public class InvoiceController {
     CSVService csvService;
     @Autowired
     QRCodeGenerator qrCodeGenerator;
+
+    @Autowired
+    FileProcessingHelper fileProcessingHelper;
+
 
     @GetMapping(value = "/invoiceByIrn")
     public @ResponseBody List<Invoice> getInvoiceByIrn(@RequestParam("irn") String irn) {
@@ -104,5 +115,43 @@ public class InvoiceController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(qrLocation);
+    }
+
+    @GetMapping(value = "/download", produces = "application/zip")
+    public void download(HttpServletRequest request,
+                         HttpServletResponse response) throws Exception {
+        response.setHeader("Content-Disposition", "attachment;filename=qr_codes.zip");
+
+        List<String> files = fileProcessingHelper.listAllFilesFromGivenPath(System.getProperty("user.home")
+                + QRCodeGenerator.QR_CODE_IMAGE_PATH);
+
+        ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
+        /* Gather all files and put it in a ZIP */
+        for (String file : files) {
+            fileProcessingHelper.addGivenFileToZip(zipOut, file);
+        }
+        zipOut.finish();
+        zipOut.close();
+
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    @GetMapping(value = "/download/{invValue}")
+    public ResponseEntity<?> downloadByFileName(HttpServletRequest request,
+                                                HttpServletResponse response,
+                                                @PathVariable("invValue") String invValue) throws Exception {
+
+        response.setContentType(String.valueOf(MediaType.IMAGE_PNG));
+        response.setHeader("Content-Disposition", "attachment;filename=qr_" + invValue + ".png");
+
+
+        File file = new File(System.getProperty("user.home")
+                + QRCodeGenerator.QR_CODE_IMAGE_PATH + "qr_" + invValue + ".png");
+
+        InputStream inputStream = new FileInputStream(file);
+        byte[] bytes = inputStream.readAllBytes();
+
+
+        return new ResponseEntity<>(bytes, HttpStatus.OK);
     }
 }

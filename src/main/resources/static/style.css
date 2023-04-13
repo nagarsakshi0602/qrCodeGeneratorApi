@@ -1,0 +1,50 @@
+html,body {
+    height: 100%;
+}
+.container-fluid {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+input[type=file]::file-selector-button{
+    background: #212529;
+    color:#fff;
+}
+input[type=file]::file-selector-button:hover {
+    color: #212529 !important;
+}
+input[type=file]::file-selector-button:focus {
+    color: #212529 !important;
+}
+.card-header{
+    color:#fff;
+    background-color: #212529 !important;
+}
+.card{
+    border-radius: 10px;
+    width: 100%;
+}
+@media screen and (max-width: 680px) {
+    .btn {
+        width: 100%;
+    }
+    .form-control{
+        width: 100%;
+    }
+    .card{
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .btn{
+        width: 70%;
+    }
+    .form-control{
+        width: 100%;
+    }
+    .card{
+        width: 50%;
+    }
+}

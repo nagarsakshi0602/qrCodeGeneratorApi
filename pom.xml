@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>qrGeneratorAPI</artifactId>
+	<artifactId>qrGenerator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>qrGeneratorAPI</name>
+	<name>qrGenerator</name>
 	<packaging>war</packaging>
 	<description>Demo project for Spring Boot</description>
 	<properties>
