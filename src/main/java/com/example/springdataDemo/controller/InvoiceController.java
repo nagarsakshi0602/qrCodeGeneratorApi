@@ -60,14 +60,14 @@ public class InvoiceController {
         if (CSVHelper.hasCSVFormat(file)) {
             try {
                 csvService.saveInvoice(file);
-                message = "File uploaded successfully: " + file.getOriginalFilename();
+                message = "Congratulations!! File uploaded successfully: " + file.getOriginalFilename();
                 return ResponseEntity.status(HttpStatus.OK).body(message);
             } catch (Exception e) {
                 message = "Could not upload the file: " + file.getOriginalFilename() + "!";
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
             }
         }
-        message = "Please upload a csv file!";
+        message = "Invalid file format. Please upload a csv file!";
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 

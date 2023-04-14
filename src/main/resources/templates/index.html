@@ -17,6 +17,9 @@
             <h4 class="text-center align-middle">File Upload</h4>
         </div>
         <div class="card-body">
+            <div class="col-md-12">
+                <h6 th:text="${message}" class="text-danger align-middle"/>
+            </div>
             <form enctype="multipart/form-data" method="POST" th:action="@{/upload}">
                 <div class="form-group d-grid">
                     <div class="row gap-3">

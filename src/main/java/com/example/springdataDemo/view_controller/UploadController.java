@@ -1,6 +1,7 @@
 package com.example.springdataDemo.view_controller;
 
 import com.example.springdataDemo.controller.InvoiceController;
+import com.example.springdataDemo.utilities.CSVHelper;
 import com.example.springdataDemo.utilities.QRCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,69 +34,24 @@ public class UploadController {
             redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
             return "redirect:/";
         }
+        if (CSVHelper.hasCSVFormat(file)) {
+            try {
+                ResponseEntity response = invoiceController.uploadInvoice(file);
+                redirectAttributes.addFlashAttribute("message",
+                        response.getBody().toString());
 
-        try {
-            invoiceController.uploadInvoice(file);
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("message",
+                        "File Upload Failed!");
+                return "redirect:/";
+            }
+        }else{
             redirectAttributes.addFlashAttribute("message",
-                    "Congratulations!! You successfully uploaded '" + file.getOriginalFilename() + "'");
-
-        } catch (Exception e) {
-            e.printStackTrace();
+                    "Invalid file format. Please upload a csv file!");
+            return "redirect:/";
         }
 
         return "redirect:/generateQR";
     }
 
-    @GetMapping("/generateQR")
-    public String uploadStatus() {
-        return "generateQR";
-    }
-
-    @GetMapping("/generateAllQR")
-    public Object generateAllQR(HttpServletRequest httpServletRequest,
-                                HttpServletResponse httpServletResponse,
-                                RedirectAttributes redirectAttributes) {
-
-        try {
-            ResponseEntity<?> response = invoiceController.generateAllQR();
-            redirectAttributes.addFlashAttribute("message",
-                    "QR code generated successfully " + response.getBody().toString());
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error",
-                    "QR code not generated successfully: " + e.getMessage());
-        }
-        try {
-            invoiceController.download(httpServletRequest, httpServletResponse);
-            redirectAttributes.addFlashAttribute("message",
-                    "Zip downloaded successfully");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error",
-                    "Unable to download zip file: " + e.getMessage());
-        }
-        return "redirect:/generateQR";
-    }
-
-    @PostMapping("/generateQRByInvoice")
-    public Object generateQRByInvoice(@RequestParam(value = "invValue") String invValue,
-                                      HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                      RedirectAttributes redirectAttributes) {
-        ResponseEntity<?> response = null;
-        try {
-            response = invoiceController.generateQRInvoiceValue(invValue);
-            redirectAttributes.addFlashAttribute("message", "Saved image location: "
-                    + QRCodeGenerator.getPath());
-
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error",
-                    "QR code not generated successfully: " + e.getMessage());
-        }
-        try {
-            invoiceController.downloadByFileName(httpServletRequest, httpServletResponse, invValue);
-            return response;
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error",
-                    "Unable to download zip file: " + e.getMessage());
-        }
-        return "redirect:/generateQR";
-    }
 }
