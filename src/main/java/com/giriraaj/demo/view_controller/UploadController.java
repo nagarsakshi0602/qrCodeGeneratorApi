@@ -1,8 +1,7 @@
-package com.example.springdataDemo.view_controller;
+package com.giriraaj.demo.view_controller;
 
-import com.example.springdataDemo.controller.InvoiceController;
-import com.example.springdataDemo.utilities.CSVHelper;
-import com.example.springdataDemo.utilities.QRCodeGenerator;
+import com.giriraaj.demo.controller.InvoiceController;
+import com.giriraaj.demo.utilities.CSVHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,13 +12,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @Controller
 public class UploadController {
 
+    private InvoiceController invoiceController;
+
     @Autowired
-    InvoiceController invoiceController;
+    public UploadController(InvoiceController invoiceController) {
+        this.invoiceController = invoiceController;
+    }
 
     @GetMapping("/")
     public String index() {
@@ -28,15 +31,14 @@ public class UploadController {
 
     @PostMapping("/upload")
     public String singleFileUpload(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
-
+                                   RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
             return "redirect:/";
         }
         if (CSVHelper.hasCSVFormat(file)) {
             try {
-                ResponseEntity response = invoiceController.uploadInvoice(file);
+                ResponseEntity response = invoiceController.uploadInvoice(file, httpServletRequest.getParameterMap());
                 redirectAttributes.addFlashAttribute("message",
                         response.getBody().toString());
 
@@ -45,7 +47,7 @@ public class UploadController {
                         "File Upload Failed!");
                 return "redirect:/";
             }
-        }else{
+        } else {
             redirectAttributes.addFlashAttribute("message",
                     "Invalid file format. Please upload a csv file!");
             return "redirect:/";

@@ -1,8 +1,8 @@
-package com.example.springdataDemo.service;
+package com.giriraaj.demo.service;
 
 
-import com.example.springdataDemo.model.Invoice;
-import com.example.springdataDemo.repository.InvoiceRepository;
+import com.giriraaj.demo.model.Invoice;
+import com.giriraaj.demo.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +11,12 @@ import java.util.Optional;
 
 @Service
 public class InvoiceService {
-    @Autowired
-    InvoiceRepository invoiceRepository;
+    private InvoiceRepository invoiceRepository;
 
     @Autowired
-    CSVService csvService;
+    public InvoiceService(InvoiceRepository invoiceRepository) {
+        this.invoiceRepository = invoiceRepository;
+    }
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();

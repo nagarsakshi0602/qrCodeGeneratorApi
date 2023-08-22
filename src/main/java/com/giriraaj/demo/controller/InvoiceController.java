@@ -1,11 +1,11 @@
-package com.example.springdataDemo.controller;
+package com.giriraaj.demo.controller;
 
-import com.example.springdataDemo.model.Invoice;
-import com.example.springdataDemo.service.CSVService;
-import com.example.springdataDemo.service.InvoiceService;
-import com.example.springdataDemo.utilities.CSVHelper;
-import com.example.springdataDemo.utilities.FileProcessingHelper;
-import com.example.springdataDemo.utilities.QRCodeGenerator;
+import com.giriraaj.demo.model.Invoice;
+import com.giriraaj.demo.service.CSVService;
+import com.giriraaj.demo.service.InvoiceService;
+import com.giriraaj.demo.utilities.CSVHelper;
+import com.giriraaj.demo.utilities.FileProcessingHelper;
+import com.giriraaj.demo.utilities.QRCodeGenerator;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,22 +21,26 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/invoice")
 public class InvoiceController {
-    @Autowired
     InvoiceService invoiceService;
-
-    @Autowired
     CSVService csvService;
-    @Autowired
     QRCodeGenerator qrCodeGenerator;
-
-    @Autowired
     FileProcessingHelper fileProcessingHelper;
+    @Autowired
+    public InvoiceController(InvoiceService invoiceService, CSVService csvService,
+                             QRCodeGenerator qrCodeGenerator, FileProcessingHelper fileProcessingHelper) {
+        this.invoiceService = invoiceService;
+        this.csvService = csvService;
+        this.qrCodeGenerator = qrCodeGenerator;
+        this.fileProcessingHelper = fileProcessingHelper;
+
+    }
 
 
     @GetMapping(value = "/invoiceByIrn")
@@ -55,12 +59,13 @@ public class InvoiceController {
     }
 
     @PostMapping(value = "/upload")
-    public ResponseEntity<?> uploadInvoice(@RequestParam("file") MultipartFile file) throws Exception {
+    public ResponseEntity<?> uploadInvoice(@RequestParam("file") MultipartFile file, Map<String, String[]> parameterMap) throws Exception {
         String message = "";
         if (CSVHelper.hasCSVFormat(file)) {
             try {
-                csvService.saveInvoice(file);
-                message = "Congratulations!! File uploaded successfully: " + file.getOriginalFilename();
+
+                csvService.saveInvoice(file, parameterMap);
+                message = "Congratulations!! File uploaded successfully: " + file.getOriginalFilename() ;
                 return ResponseEntity.status(HttpStatus.OK).body(message);
             } catch (Exception e) {
                 message = "Could not upload the file: " + file.getOriginalFilename() + "!";

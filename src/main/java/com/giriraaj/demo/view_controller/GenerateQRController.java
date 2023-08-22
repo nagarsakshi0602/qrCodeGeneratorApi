@@ -1,7 +1,7 @@
-package com.example.springdataDemo.view_controller;
+package com.giriraaj.demo.view_controller;
 
-import com.example.springdataDemo.controller.InvoiceController;
-import com.example.springdataDemo.utilities.QRCodeGenerator;
+import com.giriraaj.demo.controller.InvoiceController;
+import com.giriraaj.demo.utilities.QRCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,9 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class GenerateQRController {
+    private InvoiceController invoiceController;
 
     @Autowired
-    InvoiceController invoiceController;
+    public GenerateQRController(InvoiceController invoiceController) {
+        this.invoiceController = invoiceController;
+    }
 
     @GetMapping("/generateQR")
     public String uploadStatus() {
@@ -27,12 +30,11 @@ public class GenerateQRController {
     @GetMapping("/generateAllQR")
     public Object generateAllQR(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                 RedirectAttributes redirectAttributes) {
-
+        ResponseEntity<?> response = null;
         try {
-            ResponseEntity<?> response = invoiceController.generateAllQR();
+            response = invoiceController.generateAllQR();
             redirectAttributes.addFlashAttribute("message",
                     "QR code generated successfully " + response.getBody().toString());
-            return "redirect:/generateQR";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error",
                     "QR code not generated successfully: " + e.getMessage());
@@ -41,7 +43,7 @@ public class GenerateQRController {
             invoiceController.download(httpServletRequest, httpServletResponse);
             redirectAttributes.addFlashAttribute("message",
                     "Zip downloaded successfully");
-            return "redirect:/generateQR";
+            return response;
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error",
                     "Unable to download zip file: " + e.getMessage());
@@ -65,7 +67,7 @@ public class GenerateQRController {
         }
         try {
             invoiceController.downloadByFileName(httpServletRequest, httpServletResponse, invValue);
-            return "redirect:/generateQR";
+            return response;
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error",
                     "Unable to download zip file: " + e.getMessage());

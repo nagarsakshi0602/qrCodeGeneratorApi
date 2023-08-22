@@ -1,4 +1,4 @@
-package com.example.springdataDemo.utilities;
+package com.giriraaj.demo.utilities;
 
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;

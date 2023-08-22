@@ -1,6 +1,6 @@
-package com.example.springdataDemo.utilities;
+package com.giriraaj.demo.utilities;
 
-import com.example.springdataDemo.model.Invoice;
+import com.giriraaj.demo.model.Invoice;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
