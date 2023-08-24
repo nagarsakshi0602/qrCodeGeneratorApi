@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>qrGeneratorAPI</artifactId>
+	<artifactId>qrGenerator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>qrGeneratorAPI</name>
+	<name>qrGenerator</name>
 	<packaging>war</packaging>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -63,6 +63,13 @@
 			<version>5.7.1</version>
 			<scope>import</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<version>2.7.8</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

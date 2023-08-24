@@ -1,6 +1,6 @@
-package com.example.springdataDemo.utilities;
+package com.giriraaj.demo.utilities;
 
-import com.example.springdataDemo.model.Invoice;
+import com.giriraaj.demo.model.Invoice;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -19,8 +19,16 @@ import java.util.Optional;
 @Component
 public class QRCodeGenerator {
 
-    private static final String QR_CODE_IMAGE_PATH = "/Desktop/qr_codes/";
+    public static final String QR_CODE_IMAGE_PATH = "/Desktop/qr_codes/";
     private static String path;
+
+    public static String getPath() {
+        return path;
+    }
+
+    public static void setPath(String path) {
+        QRCodeGenerator.path = path;
+    }
 
     public byte[] generateQRImage(Object name, Optional<Invoice> invoice) {
 

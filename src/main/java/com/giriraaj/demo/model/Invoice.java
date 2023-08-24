@@ -1,4 +1,4 @@
-package com.example.springdataDemo.model;
+package com.giriraaj.demo.model;
 
 import com.opencsv.bean.CsvBindByName;
 
@@ -203,6 +203,6 @@ public class Invoice {
                 ", ewbNo='" + ewbNo + '\'' +
                 ", qrCode=" + Arrays.toString(qrCode) +
                 ", qrPath='" + qrPath + '\'' +
-                '}';
+                "}";
     }
 }

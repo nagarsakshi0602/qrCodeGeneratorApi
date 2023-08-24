@@ -1,6 +1,6 @@
-package com.example.springdataDemo.repository;
+package com.giriraaj.demo.repository;
 
-import com.example.springdataDemo.model.Invoice;
+import com.giriraaj.demo.model.Invoice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
