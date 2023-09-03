@@ -8,25 +8,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 
 @Service
 public class CSVService {
     private InvoiceRepository invoiceRepository;
 
     @Autowired
-    public CSVService(InvoiceRepository invoiceRepository){
+    public CSVService(InvoiceRepository invoiceRepository) {
         this.invoiceRepository = invoiceRepository;
     }
 
 
-    public void saveInvoice(MultipartFile file, Map<String, String[]> parameterMap){
-       /* for (String name: parameterMap.keySet()) {
-            String key = name.toString();
-            String value = parameterMap.get(name).toString();
-            Logger.getGlobal().log(System.Logger.Level.INFO,key + " " + value);
-        }*/
+    public void saveInvoice(MultipartFile file) {
         try {
             List<Invoice> namedColumn = (List<Invoice>) CSVHelper.csvToBean(file, Invoice.class);
             invoiceRepository.saveAll(namedColumn);
