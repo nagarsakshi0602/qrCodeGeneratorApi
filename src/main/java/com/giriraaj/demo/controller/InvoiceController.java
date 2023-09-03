@@ -7,6 +7,7 @@ import com.giriraaj.demo.utilities.CSVHelper;
 import com.giriraaj.demo.utilities.FileProcessingHelper;
 import com.giriraaj.demo.utilities.QRCodeGenerator;
 import com.google.zxing.WriterException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,17 +22,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/invoice")
+@Slf4j
 public class InvoiceController {
     InvoiceService invoiceService;
     CSVService csvService;
     QRCodeGenerator qrCodeGenerator;
     FileProcessingHelper fileProcessingHelper;
+
     @Autowired
     public InvoiceController(InvoiceService invoiceService, CSVService csvService,
                              QRCodeGenerator qrCodeGenerator, FileProcessingHelper fileProcessingHelper) {
@@ -59,13 +61,12 @@ public class InvoiceController {
     }
 
     @PostMapping(value = "/upload")
-    public ResponseEntity<?> uploadInvoice(@RequestParam("file") MultipartFile file, Map<String, String[]> parameterMap) throws Exception {
+    public ResponseEntity<?> uploadInvoice(@RequestParam("file") MultipartFile file) throws Exception {
         String message = "";
         if (CSVHelper.hasCSVFormat(file)) {
             try {
-
-                csvService.saveInvoice(file, parameterMap);
-                message = "Congratulations!! File uploaded successfully: " + file.getOriginalFilename() ;
+                csvService.saveInvoice(file);
+                message = "Congratulations!! File uploaded successfully: " + file.getOriginalFilename();
                 return ResponseEntity.status(HttpStatus.OK).body(message);
             } catch (Exception e) {
                 message = "Could not upload the file: " + file.getOriginalFilename() + "!";
