@@ -1,6 +1,6 @@
 package com.giriraaj.demo.utilities;
 
-import com.giriraaj.demo.model.Invoice;
+import com.giriraaj.demo.model.QRInfo;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -30,11 +30,10 @@ public class QRCodeGenerator {
         QRCodeGenerator.path = path;
     }
 
-    public byte[] generateQRImage(Object name, Optional<Invoice> invoice) {
+    public byte[] generateQRImage(Object name, Optional<QRInfo> invoice) {
 
         //setting qr path
         path = System.getProperty("user.home") + QR_CODE_IMAGE_PATH;
-
         //Creating qr matrix
         BitMatrix matrix = null;
         try {
@@ -79,10 +78,10 @@ public class QRCodeGenerator {
         return invoice.get().getQrCode();
     }
 
-    public String generateQRImage(List<Invoice> invoices) {
+    public String generateQRImage(List<QRInfo> QRInfos) {
 
-        for (Invoice invoice : invoices) {
-            generateQRImage(invoice.getInvValue(), Optional.of(invoice));
+        for (QRInfo QRInfo : QRInfos) {
+            generateQRImage(QRInfo.getInvValue(), Optional.of(QRInfo));
         }
 
         return "Saved QR code location: " + path;

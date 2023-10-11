@@ -6,11 +6,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Arrays;
 
 @Entity
 @Table(name = "invoice")
-public class Invoice {
+public class QRInfo {
     @Id
     @CsvBindByName(column = "Sl. No")
     private Long id;
@@ -53,10 +52,10 @@ public class Invoice {
     @Column(name = "qr_path")
     private String qrPath;
 
-    public Invoice() {
+    public QRInfo() {
     }
 
-    public Invoice(Long id, String irn, String ackNo, String ackDate, String docNo, String docType, String docDate, String invValue, String recipientGSTIN, String status, String signature, String ewbNo, byte[] qrCode, String qrPath) {
+    public QRInfo(Long id, String irn, String ackNo, String ackDate, String docNo, String docType, String docDate, String invValue, String recipientGSTIN, String status, String signature, String ewbNo, byte[] qrCode, String qrPath) {
         this.id = id;
         this.irn = irn;
         this.ackNo = ackNo;
@@ -201,8 +200,6 @@ public class Invoice {
                 ", status='" + status + '\'' +
                 ", signature='" + signature + '\'' +
                 ", ewbNo='" + ewbNo + '\'' +
-                ", qrCode=" + Arrays.toString(qrCode) +
-                ", qrPath='" + qrPath + '\'' +
                 "}";
     }
 }

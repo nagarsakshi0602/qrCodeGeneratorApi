@@ -1,9 +1,7 @@
 package com.giriraaj.demo.controller;
 
-import com.giriraaj.demo.model.Invoice;
-import com.giriraaj.demo.service.CSVService;
-import com.giriraaj.demo.service.InvoiceService;
-import com.giriraaj.demo.utilities.CSVHelper;
+import com.giriraaj.demo.model.QRInfo;
+import com.giriraaj.demo.service.QRInfoService;
 import com.giriraaj.demo.utilities.FileProcessingHelper;
 import com.giriraaj.demo.utilities.QRCodeGenerator;
 import com.google.zxing.WriterException;
@@ -13,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,60 +23,24 @@ import java.util.Optional;
 import java.util.zip.ZipOutputStream;
 
 @RestController
-@RequestMapping("/invoice")
+@RequestMapping("/qr")
 @Slf4j
-public class InvoiceController {
-    InvoiceService invoiceService;
-    CSVService csvService;
+public class QRController {
+    QRInfoService QRInfoService;
     QRCodeGenerator qrCodeGenerator;
     FileProcessingHelper fileProcessingHelper;
 
     @Autowired
-    public InvoiceController(InvoiceService invoiceService, CSVService csvService,
-                             QRCodeGenerator qrCodeGenerator, FileProcessingHelper fileProcessingHelper) {
-        this.invoiceService = invoiceService;
-        this.csvService = csvService;
+    public QRController(QRInfoService QRInfoService, QRCodeGenerator qrCodeGenerator,
+                        FileProcessingHelper fileProcessingHelper) {
+        this.QRInfoService = QRInfoService;
         this.qrCodeGenerator = qrCodeGenerator;
         this.fileProcessingHelper = fileProcessingHelper;
-
     }
 
-
-    @GetMapping(value = "/invoiceByIrn")
-    public @ResponseBody List<Invoice> getInvoiceByIrn(@RequestParam("irn") String irn) {
-        return invoiceService.findByIrn(irn);
-    }
-
-    @GetMapping(value = "/all")
-    public @ResponseBody List<Invoice> getInvoices() {
-        return invoiceService.getAllInvoices();
-    }
-
-    @GetMapping(value = "/invoiceById")
-    public @ResponseBody Optional<Invoice> getInvoice(@RequestParam("id") Long id) {
-        return invoiceService.findById(id);
-    }
-
-    @PostMapping(value = "/upload")
-    public ResponseEntity<?> uploadInvoice(@RequestParam("file") MultipartFile file) throws Exception {
-        String message = "";
-        if (CSVHelper.hasCSVFormat(file)) {
-            try {
-                csvService.saveInvoice(file);
-                message = "Congratulations!! File uploaded successfully: " + file.getOriginalFilename();
-                return ResponseEntity.status(HttpStatus.OK).body(message);
-            } catch (Exception e) {
-                message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
-            }
-        }
-        message = "Invalid file format. Please upload a csv file!";
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-    }
-
-    @GetMapping(value = "/getQRById")
+    @GetMapping(value = "/getById")
     public ResponseEntity<?> generateQR(@RequestParam("id") Long id) throws IOException, WriterException {
-        Optional<Invoice> invoice = invoiceService.findById(id);
+        Optional<QRInfo> invoice = QRInfoService.findById(id);
 
         byte[] imageBytes;
         try {
@@ -91,14 +52,14 @@ public class InvoiceController {
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.IMAGE_PNG).body(imageBytes);
     }
 
-    @GetMapping(value = "/getQRByInvoiceValue")
+    @GetMapping(value = "/getByInvoiceValue")
     public ResponseEntity<?> generateQRInvoiceValue(@RequestParam("invoiceValue") String invoiceValue) {
 
-        Invoice invoice = invoiceService.findByInvoiceValue(invoiceValue);
+        QRInfo QRInfo = QRInfoService.findByInvoiceValue(invoiceValue);
 
         byte[] imageBytes;
         try {
-            imageBytes = qrCodeGenerator.generateQRImage(invoiceValue, Optional.ofNullable(invoice));
+            imageBytes = qrCodeGenerator.generateQRImage(invoiceValue, Optional.ofNullable(QRInfo));
 
         } catch (Exception e) {
             throw new RuntimeException("QR not generated successfully " + e.getMessage());
@@ -107,14 +68,14 @@ public class InvoiceController {
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.IMAGE_PNG).body(imageBytes);
     }
 
-    @GetMapping(value = "/getAllQR")
+    @GetMapping(value = "/all")
     public ResponseEntity<?> generateAllQR() {
 
-        List<Invoice> invoices = invoiceService.getAllInvoices();
+        List<QRInfo> QRInfos = QRInfoService.getAllInvoices();
 
         String qrLocation;
         try {
-            qrLocation = qrCodeGenerator.generateQRImage(invoices);
+            qrLocation = qrCodeGenerator.generateQRImage(QRInfos);
 
         } catch (Exception e) {
             throw new RuntimeException("QR not generated successfully " + e.getMessage());
@@ -124,7 +85,7 @@ public class InvoiceController {
     }
 
     @GetMapping(value = "/download", produces = "application/zip")
-    public void download(HttpServletRequest request,
+    public void downloadQR(HttpServletRequest request,
                          HttpServletResponse response) throws Exception {
         response.setHeader("Content-Disposition", "attachment;filename=qr_codes.zip");
 
@@ -143,7 +104,7 @@ public class InvoiceController {
     }
 
     @GetMapping(value = "/download/{invValue}")
-    public ResponseEntity<?> downloadByFileName(HttpServletRequest request,
+    public ResponseEntity<?> downloadQRByFileName(HttpServletRequest request,
                                                 HttpServletResponse response,
                                                 @PathVariable("invValue") String invValue) throws Exception {
 

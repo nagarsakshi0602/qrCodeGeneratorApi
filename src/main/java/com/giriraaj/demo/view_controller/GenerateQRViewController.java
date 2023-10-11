@@ -1,6 +1,6 @@
 package com.giriraaj.demo.view_controller;
 
-import com.giriraaj.demo.controller.InvoiceController;
+import com.giriraaj.demo.controller.QRController;
 import com.giriraaj.demo.utilities.QRCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-public class GenerateQRController {
-    private InvoiceController invoiceController;
+public class GenerateQRViewController {
+    private QRController qrController;
 
     @Autowired
-    public GenerateQRController(InvoiceController invoiceController) {
-        this.invoiceController = invoiceController;
+    public GenerateQRViewController(QRController qrController) {
+        this.qrController = qrController;
     }
 
     @GetMapping("/generateQR")
@@ -32,7 +32,7 @@ public class GenerateQRController {
                                 RedirectAttributes redirectAttributes) {
         ResponseEntity<?> response = null;
         try {
-            response = invoiceController.generateAllQR();
+            response = qrController.generateAllQR();
             redirectAttributes.addFlashAttribute("message",
                     "QR code generated successfully " + response.getBody().toString());
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class GenerateQRController {
                     "QR code not generated successfully: " + e.getMessage());
         }
         try {
-            invoiceController.download(httpServletRequest, httpServletResponse);
+            qrController.downloadQR(httpServletRequest, httpServletResponse);
             redirectAttributes.addFlashAttribute("message",
                     "Zip downloaded successfully");
             return response;
@@ -57,7 +57,7 @@ public class GenerateQRController {
                                       RedirectAttributes redirectAttributes) {
         ResponseEntity<?> response = null;
         try {
-            response = invoiceController.generateQRInvoiceValue(invValue);
+            response = qrController.generateQRInvoiceValue(invValue);
             redirectAttributes.addFlashAttribute("message", "Saved image location: "
                     + QRCodeGenerator.getPath());
 
@@ -66,7 +66,7 @@ public class GenerateQRController {
                     "QR code not generated successfully: " + e.getMessage());
         }
         try {
-            invoiceController.downloadByFileName(httpServletRequest, httpServletResponse, invValue);
+            qrController.downloadQRByFileName(httpServletRequest, httpServletResponse, invValue);
             return response;
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error",
