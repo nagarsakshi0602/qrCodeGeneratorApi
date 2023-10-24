@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "invoice")
+@Table(name = "qr_info")
 public class QRInfo {
     @Id
     @CsvBindByName(column = "Sl. No")

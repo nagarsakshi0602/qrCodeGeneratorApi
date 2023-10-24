@@ -18,29 +18,27 @@ import java.util.Optional;
 @RequestMapping("/qrInfo")
 @Slf4j
 public class QRInfoController {
-    QRInfoService QRInfoService;
-    CSVService csvService;
+    QRInfoService qrInfoService;
 
     @Autowired
-    public QRInfoController(QRInfoService QRInfoService, CSVService csvService) {
-        this.QRInfoService = QRInfoService;
-        this.csvService = csvService;
+    public QRInfoController(QRInfoService qrInfoService) {
+        this.qrInfoService = qrInfoService;
     }
 
 
     @GetMapping(value = "/byIrn")
     public @ResponseBody List<QRInfo> getQRInfoByIrn(@RequestParam("irn") String irn) {
-        return QRInfoService.findByIrn(irn);
+        return qrInfoService.findByIrn(irn);
     }
 
     @GetMapping(value = "/all")
     public @ResponseBody List<QRInfo> getAllQRInfo() {
-        return QRInfoService.getAllInvoices();
+        return qrInfoService.getAllInvoices();
     }
 
     @GetMapping(value = "/byInvoiceId")
     public @ResponseBody Optional<QRInfo> getQRInfoByInvoiceId(@RequestParam("id") Long id) {
-        return QRInfoService.findById(id);
+        return qrInfoService.findById(id);
     }
 
     @PostMapping(value = "/uploadQRInfo")
@@ -48,7 +46,7 @@ public class QRInfoController {
         String message = "";
         if (CSVHelper.hasCSVFormat(file)) {
             try {
-                csvService.saveInvoice(file);
+                qrInfoService.saveQRInfo(file);
                 message = "Congratulations!! File uploaded successfully: " + file.getOriginalFilename();
                 return ResponseEntity.status(HttpStatus.OK).body(message);
             } catch (Exception e) {
