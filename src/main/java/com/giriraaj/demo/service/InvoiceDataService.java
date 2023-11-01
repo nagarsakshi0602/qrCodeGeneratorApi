@@ -4,10 +4,12 @@ import com.giriraaj.demo.model.Invoice;
 import com.giriraaj.demo.model.InvoiceData;
 import com.giriraaj.demo.repository.InvoiceDataRepository;
 import com.giriraaj.demo.repository.InvoiceRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class InvoiceDataService {
 
     private InvoiceDataRepository invoiceDataRepository;

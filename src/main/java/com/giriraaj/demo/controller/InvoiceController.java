@@ -1,6 +1,7 @@
 package com.giriraaj.demo.controller;
 
 import com.giriraaj.demo.model.Invoice;
+import com.giriraaj.demo.model.InvoiceData;
 import com.giriraaj.demo.model.QRInfo;
 import com.giriraaj.demo.service.InvoiceDataService;
 import com.giriraaj.demo.service.InvoiceService;
@@ -33,22 +34,20 @@ public class InvoiceController {
     InvoiceService invoiceService;
     QRInfoService qrInfoService;
     QRController qrController;
-
     InvoiceDataService invoiceDataService;
 
 
     @Autowired
     public InvoiceController(InvoiceService invoiceService, QRInfoService qrInfoService,
-                             QRController qrController) {
+                             QRController qrController, InvoiceDataService invoiceDataService) {
         this.invoiceService = invoiceService;
         this.qrInfoService = qrInfoService;
         this.qrController = qrController;
+        this.invoiceDataService = invoiceDataService;
     }
 
-    @GetMapping(value = "/get/{inValue}")
-    public ResponseEntity<?> getInvoice(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        @PathVariable("invValue") String invValue) throws Exception {
+    @GetMapping(value = "/get/{invValue}")
+    public ResponseEntity<?> getInvoice(@PathVariable("invValue") String invValue) throws Exception {
 
         //Generate QR for particular invoice number
         QRInfo qrInfo = qrInfoService.findByInvoiceValue(invValue);
@@ -78,10 +77,11 @@ public class InvoiceController {
             map.put("ewayBillNo", invoice.getEwayBillNo());
 
         //Get Invoice data
-        JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(invoiceDataService
-                .findByInvoiceValue(invValue));
+        List<InvoiceData> invoiceDataList = invoiceDataService.findByInvoiceValue(invValue);
+        invoiceDataList.size();
+        JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(invoiceDataList);
         JasperReport compiledReport = JasperCompileManager.compileReport(
-                new FileInputStream("src/main/resources/Invoice.jrxml"));
+                new FileInputStream("/Users/sakshinagar/Documents/qrGenerator/src/main/resources/Invoice.jrxml"));
 
         //Fill report and export into pdf file
         String destFileName = System.getProperty("user.home") + File.separator +

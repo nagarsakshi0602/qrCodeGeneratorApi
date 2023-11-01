@@ -4,35 +4,34 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Arrays;
 
 @Entity
 @Table(name = "invoice_data")
 public class InvoiceData {
     @Id
     private Long id;
-    @Column(name = "hsn")
-    private String hsn;
+    @Column(name = "item_id")
+    private Integer itemId;
     @Column(name = "description")
     private String description;
     @Column(name = "design")
     private String design;
     @Column(name = "quantity")
-    private String quantity;
+    private Integer quantity;
     @Column(name = "rate")
-    private String rate;
+    private Double rate;
     @Column(name = "amount")
-    private String amount;
+    private Double amount;
     @Column(name = "inv_value")
     private String invValue;
 
     public InvoiceData() {
     }
 
-    public InvoiceData(Long id, String hsn, String description, String design, String quantity, String rate,
-                       String amount, String invValue) {
+    public InvoiceData(Long id, Integer itemId, String description, String design, Integer quantity, Double rate,
+                       Double amount, String invValue) {
         this.id = id;
-        this.hsn = hsn;
+        this.itemId = itemId;
         this.description = description;
         this.design = design;
         this.quantity = quantity;
@@ -49,12 +48,12 @@ public class InvoiceData {
         this.id = id;
     }
 
-    public String getHsn() {
-        return hsn;
+    public Integer getItemId() {
+        return itemId;
     }
 
-    public void setHsn(String hsn) {
-        this.hsn = hsn;
+    public void setItemId(Integer itemId) {
+        this.itemId = itemId;
     }
 
     public String getDescription() {
@@ -73,27 +72,27 @@ public class InvoiceData {
         this.design = design;
     }
 
-    public String getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
-    public String getRate() {
+    public Double getRate() {
         return rate;
     }
 
-    public void setRate(String rate) {
+    public void setRate(Double rate) {
         this.rate = rate;
     }
 
-    public String getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -109,7 +108,7 @@ public class InvoiceData {
     public String toString() {
         return "InvoiceData{" +
                 "id=" + id +
-                ", hsn='" + hsn + '\'' +
+                ", itemId='" + itemId + '\'' +
                 ", description='" + description + '\'' +
                 ", design='" + design + '\'' +
                 ", quantity='" + quantity + '\'' +

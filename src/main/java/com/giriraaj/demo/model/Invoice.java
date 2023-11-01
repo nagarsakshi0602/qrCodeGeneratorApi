@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Date;
 import java.util.Arrays;
 
 @Entity
@@ -14,7 +15,7 @@ public class Invoice {
     @Column(name = "inv_value")
     private String invValue;
     @Column(name = "inv_date")
-    private String invDate;
+    private Date invDate;
     @Column(name = "seller_name")
     private String sellerName;
     @Column(name = "seller_address")
@@ -32,29 +33,25 @@ public class Invoice {
     @Column(name = "lr_no")
     private String lrNo;
     @Column(name = "lr_date")
-    private String lrDate;
+    private Date lrDate;
     @Column(name = "no_of_parcel")
-    private byte[] noOfParcel;
-
+    private Integer noOfParcel;
     @Column(name = "party_order_no")
-    private String partyOrderNo;
-
+    private Integer partyOrderNo;
     @Column(name = "lot_no")
-    private String lotNo;
-
+    private Integer lotNo;
     @Column(name = "agent_name")
     private String agentName;
-
     @Column(name = "eway_bill_no")
     private String ewayBillNo;
 
     public Invoice() {
     }
 
-    public Invoice(Long id, String invValue, String invDate, String sellerName, String sellerAddress,
+    public Invoice(Long id, String invValue, Date invDate, String sellerName, String sellerAddress,
                    String sellerGstino, String clientAddress, String clientTelNo, String clientGstino,
-                   String transportName, String lrNo, String lrDate, byte[] noOfParcel, String partyOrderNo,
-                   String lotNo, String agentName, String ewayBillNo) {
+                   String transportName, String lrNo, Date lrDate, Integer noOfParcel, Integer partyOrderNo,
+                   Integer lotNo, String agentName, String ewayBillNo) {
         this.id = id;
         this.invValue = invValue;
         this.invDate = invDate;
@@ -90,11 +87,11 @@ public class Invoice {
         this.invValue = invValue;
     }
 
-    public String getInvDate() {
+    public Date getInvDate() {
         return invDate;
     }
 
-    public void setInvDate(String invDate) {
+    public void setInvDate(Date invDate) {
         this.invDate = invDate;
     }
 
@@ -162,35 +159,35 @@ public class Invoice {
         this.lrNo = lrNo;
     }
 
-    public String getLrDate() {
+    public Date getLrDate() {
         return lrDate;
     }
 
-    public void setLrDate(String lrDate) {
+    public void setLrDate(Date lrDate) {
         this.lrDate = lrDate;
     }
 
-    public byte[] getNoOfParcel() {
+    public Integer getNoOfParcel() {
         return noOfParcel;
     }
 
-    public void setNoOfParcel(byte[] noOfParcel) {
+    public void setNoOfParcel(Integer noOfParcel) {
         this.noOfParcel = noOfParcel;
     }
 
-    public String getPartyOrderNo() {
+    public Integer getPartyOrderNo() {
         return partyOrderNo;
     }
 
-    public void setPartyOrderNo(String partyOrderNo) {
+    public void setPartyOrderNo(Integer partyOrderNo) {
         this.partyOrderNo = partyOrderNo;
     }
 
-    public String getLotNo() {
+    public Integer getLotNo() {
         return lotNo;
     }
 
-    public void setLotNo(String lotNo) {
+    public void setLotNo(Integer lotNo) {
         this.lotNo = lotNo;
     }
 
@@ -225,7 +222,7 @@ public class Invoice {
                 ", transportName='" + transportName + '\'' +
                 ", lrNo='" + lrNo + '\'' +
                 ", lrDate='" + lrDate + '\'' +
-                ", noOfParcel=" + Arrays.toString(noOfParcel) +
+                ", noOfParcel=" + noOfParcel +
                 ", partyOrderNo='" + partyOrderNo + '\'' +
                 ", lotNo='" + lotNo + '\'' +
                 ", agentName='" + agentName + '\'' +
